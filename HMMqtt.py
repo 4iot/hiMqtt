@@ -31,7 +31,7 @@ def on_message(client, userdata, msg):
             idFileHandle = open(idFileName,'w')
             idFileHandle.write(deviceId)
             idFileHandle.close
-            #mqttc.unsubscribe(expected_topic)
+            mqttc.unsubscribe(expected_topic)
     else:
         print "Device rejected"
         exit(1)
@@ -67,8 +67,8 @@ def connectMqtt(Broker,Port,Keepalive):
         mqttc.on_connect = on_connect
         mqttc.on_message = on_message
         mqttc.connect(broker,port,keepalive)
-        mqttc.subscribe(expected_topic)
-        mqttc.publish("4iot/please_register", clientId)
+        mqttc.subscribe(expected_topic,2)
+        mqttc.publish("4iot/please_register", clientId,1)
         mqttc.loop_forever()
     else:
         a = 1   
@@ -76,4 +76,5 @@ def connectMqtt(Broker,Port,Keepalive):
 def publish_message(client,message):
     mqttc = mqttcl.Client(client)
     mqttc.connect(broker,port,keepalive)
-    mqttc.publish("4iot/message", json.dumps(message))
+    mqttc.publish("4iot/message", json.dumps(message),1)
+    mqttc.loop(timeout=1.0, max_packets=1)

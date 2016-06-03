@@ -11,7 +11,6 @@ import netinfo
 import json
 import ConfigParser
 import time
-import pymongo
 import urllib2
 
 
