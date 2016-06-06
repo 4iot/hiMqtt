@@ -4,7 +4,6 @@
 import sys
 from HiMessageMqtt import HiMessage
 import HMMqtt 
-#import paho.mqtt.client as mqtt
 import os.path
 from os.path import expanduser
 import netinfo
