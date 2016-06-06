@@ -11,19 +11,24 @@ import netinfo
 import json
 import ConfigParser
 import time
+import pymongo
 import urllib2
 
 
 # Read the configuration file
 Config = ConfigParser.ConfigParser()
 from os.path import expanduser
-CfgFileName = expanduser("~") + '/hiconfig.ini'
-Config.read(CfgFileName)
-broker = Config.get('mqtt','broker',raw=False)
-port = Config.getint('mqtt','port')
-keepalive = Config.getint('mqtt','keepalive')
-loopmode = Config.getboolean('misc','loopmode')
-loopwait = Config.getint('misc','loopwait')
+CfgFileName = os.path.dirname(os.path.realpath(__file__)) + '/hiconfig.ini'
+if ( os.path.exists(CfgFileName) ):
+    Config.read(CfgFileName)
+    broker = Config.get('mqtt','broker',raw=False)
+    port = Config.getint('mqtt','port')
+    keepalive = Config.getint('mqtt','keepalive')
+    loopmode = Config.getboolean('misc','loopmode')
+    loopwait = Config.getint('misc','loopwait')
+else:
+    print ("Cannot find hiconfig.ini file, please contact admin")
+    exit(1)
 
 
 # Connect to mqtt server
@@ -53,6 +58,7 @@ while True:
          if (message != None) and (message != ""):
             msg.info(message)
 
+   print ("sending message")
    msg.send(publicUrl,msg)
    if (loopmode == True ):
       time.sleep(loopwait)
