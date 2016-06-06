@@ -55,19 +55,22 @@ def get_cpu_temp_from_hardware(hardware):
         temp = float(subprocess.check_output(["/opt/vc/bin/vcgencmd","measure_temp"]).strip().lstrip('temp=').rstrip('\'C'))
     elif hardware == 7: # sensors
         res = subprocess.check_output(["/usr/bin/sensors"]).splitlines()
-	length = len(res)
-	index = 0
-	while (index < length):
-		currentLine = res[index]
-		match = re.search('Core\s+\d+:\s+\+(\d+\.\d+)',currentLine)
-		if  match != None:
-			temp = float(match.group(1))
-			break
-		else:
-			a = 1
-		index += 1
-
-
+        length = len(res)
+        index = 0
+        idx = 0
+        Temp = []
+        while (index < length):
+            currentLine = res[index]
+            match = re.search('Core\s+\d+:\s+\+(\d+\.\d+)',currentLine)
+            if  match != None:
+                Temp.append (float(match.group(1)))
+            else:
+                a = 1
+            index += 1
+        SortedTemp = sorted (Temp)
+        Len=len(SortedTemp)-1
+        temp = SortedTemp[Len]
+        a = 1
     else:
         return None
     return temp
