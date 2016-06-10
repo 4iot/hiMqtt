@@ -7,9 +7,7 @@ import re
 import shutil
 
 def on_connect(client, userdata, flags, rc):
-    print("Connected with result code "+str(rc))
-    # Subscribing in on_connect() means that if we lose the connection and
-    # reconnect then subscriptions will be renewed.
+    print("Device connected as " + client._client_id + " status " +str(rc))
 
 global deviceId
 
@@ -72,6 +70,7 @@ def connectMqtt(Broker,Port,Keepalive):
         deviceId = idFileHandle.readline()
         deviceId = deviceId.strip()
         idFileHandle.close
+        print("Device connected as " + deviceId)
     elif ( deviceId == None and clientId != None ):
         expected_topic = "4iot/register_accepted/" + clientId
         mqttc = mqttcl.Client(client)
@@ -84,7 +83,10 @@ def connectMqtt(Broker,Port,Keepalive):
     else:
         print ('No way to register, sorry!')
         
-def publish_message(client,message):
+def publish_message(collection,statement,client,contents):
     mqttc = mqttcl.Client(client)
     mqttc.connect(broker,port,keepalive)
-    mqttc.publish("4iot/message", json.dumps(message),1)
+    topic = '4iot/' + statement + '/' + collection
+    #mqttc.publish("4iot/message", json.dumps(contents),1)
+    mqttc.publish(topic, json.dumps(contents),1)
+    mqttc.disconnect()

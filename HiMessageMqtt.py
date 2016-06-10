@@ -83,7 +83,7 @@ class HiMessage:
     def send(self,publicUrl,msg):
         # append public URL to data
         self.__data['clientIp'] = publicUrl
-        HMMqtt.publish_message(self.__data['id'],self.__data)
+        HMMqtt.publish_message('messages','insert',self.__data['id'],self.__data)
 
     def add(self, key, value):
         self.__data[key] = value
